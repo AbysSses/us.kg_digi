@@ -4,9 +4,10 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run start",
   "rewrites": [
-    { "source": "/", "destination": "/public/index.html" },
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/index.html", "destination": "/public/index.html" },
     { "source": "/blog", "destination": "/index.html" },
     { "source": "/blog/:path*", "destination": "/:path*" },
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/(css|js|assets)/(.*)", "destination": "/public/$1/$2" }
   ]
 }
