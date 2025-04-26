@@ -6,10 +6,7 @@
   "rewrites": [
     { "source": "/", "destination": "/public/index.html" },
     { "source": "/blog", "destination": "/index.html" },
-    { "source": "/blog/:path*", "destination": "/:path*" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "status": 404, "dest": "/404" }
+    { "source": "/blog/:path*", "destination": "/:path*" },
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 }
