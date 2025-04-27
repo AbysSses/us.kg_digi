@@ -4,6 +4,19 @@
                   {% for imp in dynamics.sidebar.top %}
                         {% include imp %}
                   {% endfor %}
+
+                  <!-- 添加 Guid 链接 -->
+                  <div class="guid-link">
+                        <div class="guid-title-container">
+                              <div class="guid-title">
+                                    <a href="https://hcyang.us.kg" style="text-decoration: none; display: flex; align-items: center;">
+                                          <i icon-name="external-link" style="margin-right: 5px;"></i>
+                                          <span>Guid</span>
+                                    </a>
+                              </div>
+                        </div>
+                  </div>
+
                   {%if settings.dgShowLocalGraph === true%}
                         {%include "components/graphScript.njk"%}
                   {%endif%}
