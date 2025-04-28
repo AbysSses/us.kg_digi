@@ -1,68 +1,109 @@
 ---
-{"dg-publish":true,"dg-path":" blogs/index.md","permalink":"/blogs/index/","tags":["gardenEntry"],"created":"2025-04-25T23:37:41.966+08:00","updated":"2025-04-28T23:38:52.739+08:00"}
+{"dg-publish":true,"dg-path":" blogs/index.md","permalink":"/blogs/index/","tags":["gardenEntry"],"created":"2025-04-25T23:37:41.966+08:00","updated":"2025-04-28T23:41:25.185+08:00"}
 ---
 
-{%- raw -%}
-<div class="home-content">
-  <h1>欢迎来到我的数字花园</h1>
-  <p>在这里记录我的想法和学习。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>我的笔记主页</title>
+  <style>
+    /* 简单重置 & 布局 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
+    header { background: #0070f3; color: white; padding: 1rem; text-align: center; }
+    nav a { color: white; margin: 0 0.5rem; text-decoration: none; }
+    main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    h1.page-title { margin-bottom: 1rem; }
+    /* 笔记卡片 */
+    .note-list { list-style: none; }
+    .note-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .note-card a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      padding: 1rem;
+    }
+    .note-card h2 {
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+    .note-card time {
+      font-size: 0.875rem;
+      color: #666;
+    }
+    .note-card p.excerpt {
+      margin-top: 0.75rem;
+      color: #444;
+    }
+    /* Loading & 错误提示 */
+    #loading, #error {
+      text-align: center;
+      color: #666;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
 
-  <hr>
+  <header>
+    <h1>我的笔记站</h1>
+    <nav>
+      <a href="/">首页</a>
+      <a href="/about">关于我</a>
+      <a href="/notes">所有笔记</a>
+    </nav>
+  </header>
 
-  <h2>最新笔记</h2>
-  <ul class="recent-notes-list">
-    {# 获取所有笔记，按日期降序排序，并限制为最新的 5 篇 #}
-    {% set recentNotes = collections.note | reverse | limit(5) %}
+  <main>
+    <h1 class="page-title">最新发布的笔记</h1>
+    <div id="loading">加载中…</div>
+    <div id="error" style="display:none;">拉取笔记失败，请稍后重试。</div>
+    <ul id="notes" class="note-list"></ul>
+  </main>
 
-    {# 遍历最新笔记并显示链接 #}
-    {% for note in recentNotes %}
-      <li>
-        <a href="{{ note.url | url }}">{{ note.data.title or note.fileSlug }}</a>
-        {# 可选：显示笔记日期 #}
-        {% if note.data.created %}
-          <span class="note-date">- {{ note.data.created | date('yyyy-MM-dd') }}</span>
-        {% elif note.date %}
-           <span class="note-date">- {{ note.date | date('yyyy-MM-dd') }}</span>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+  <script>
+    // 向你的插件/后端暴露的接口请求最新笔记数据
+    fetch('/api/notes?sort=date_desc&limit=5')
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(notes => {
+        document.getElementById('loading').style.display = 'none';
+        const ul = document.getElementById('notes');
+        if (notes.length === 0) {
+          ul.innerHTML = '<p>暂时还没有笔记。</p>';
+          return;
+        }
+        notes.forEach(note => {
+          const li = document.createElement('li');
+          li.className = 'note-card';
+          li.innerHTML = `
+            <a href="${note.url}">
+              <h2>${note.title}</h2>
+              <time datetime="${note.date}">${new Date(note.date).toLocaleDateString()}</time>
+              <p class="excerpt">${note.excerpt || ''}</p>
+            </a>
+          `;
+          ul.appendChild(li);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('loading').style.display = 'none';
+        const e = document.getElementById('error');
+        e.style.display = 'block';
+        e.textContent = '加载笔记出错：' + err.message;
+      });
+  </script>
 
-  {# 您可以在此处添加其他主页内容 #}
-
-</div>
-{%- endraw -%}
-
-<style>
-/* 您可以添加一些基本的样式 */
-.home-content {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-}
-
-.recent-notes-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.recent-notes-list li {
-  margin-bottom: 10px;
-  font-size: 1.1em;
-}
-
-.recent-notes-list a {
-  text-decoration: none;
-  color: var(--text-accent); /* 使用您主题的强调色 */
-}
-
-.recent-notes-list a:hover {
-  text-decoration: underline;
-}
-
-.note-date {
-  color: var(--text-muted); /* 使用您主题的柔和文本颜色 */
-  font-size: 0.85em;
-  margin-left: 8px;
-}
-</style>
+</body>
+</html>
