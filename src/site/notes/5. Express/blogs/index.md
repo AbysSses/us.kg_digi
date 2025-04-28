@@ -1,7 +1,6 @@
 ---
-{"dg-publish":true,"dg-path":" blogs/index.md","permalink":"/blogs/index/","tags":["gardenEntry"],"created":"2025-04-25T23:37:41.966+08:00","updated":"2025-04-28T23:37:19.796+08:00"}
+{"dg-publish":true,"dg-path":" blogs/index.md","permalink":"/blogs/index/","tags":["gardenEntry"],"created":"2025-04-25T23:37:41.966+08:00","updated":"2025-04-28T23:38:52.739+08:00"}
 ---
-
 
 {%- raw -%}
 <div class="home-content">
@@ -15,12 +14,16 @@
     {# 获取所有笔记，按日期降序排序，并限制为最新的 5 篇 #}
     {% set recentNotes = collections.note | reverse | limit(5) %}
 
-    {# 遍历最新笔记并显示链接和日期 #}
+    {# 遍历最新笔记并显示链接 #}
     {% for note in recentNotes %}
       <li>
         <a href="{{ note.url | url }}">{{ note.data.title or note.fileSlug }}</a>
-        {# 强制显示日期 - 优先使用 'created'，然后是 'date' #}
-        <span class="note-date">- {{ (note.data.created or note.date) | date('yyyy-MM-dd') }}</span>
+        {# 可选：显示笔记日期 #}
+        {% if note.data.created %}
+          <span class="note-date">- {{ note.data.created | date('yyyy-MM-dd') }}</span>
+        {% elif note.date %}
+           <span class="note-date">- {{ note.date | date('yyyy-MM-dd') }}</span>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
