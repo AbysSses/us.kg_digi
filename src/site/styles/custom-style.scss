@@ -25,31 +25,4 @@ body {
     //  }
 }
 
-/* Guid 链接样式 */
-.guid-link {
-  margin-bottom: 15px;
-  background-color: var(--background-primary);
-  border-radius: 10px;
-  padding: 10px;
-}
 
-.guid-title-container {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.guid-title {
-  font-size: 1.2rem;
-  color: var(--h6-color);
-  width: 100%;
-}
-
-.guid-title a {
-  color: var(--text-accent);
-  transition: color 0.2s ease;
-}
-
-.guid-title a:hover {
-  color: var(--text-accent-hover);
-  text-decoration: underline;
-}
